@@ -1,5 +1,5 @@
-# AOS19AK
-📖🐦 Lessons for R workshop at #AOS19AK
+# Hendrix
+📖🐦 Lessons for R workshop at Hendrix ColleAK
 
 Outline:  
 Day 1  
@@ -9,4 +9,6 @@ Day 1
 Day 2  
 3. Using Spreadsheets with R  
 4. Functions and automation with R  
+
+
 
