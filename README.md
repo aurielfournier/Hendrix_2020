@@ -1,2 +1,2 @@
-# AOS19AK
-📖🐦 Lessons for R workshop at #AOS19AK
+# Hendrix
+📖🐦 Lessons for R workshop at Hendrix College
