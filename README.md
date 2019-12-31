@@ -1,5 +1,5 @@
 # Hendrix
-📖🐦 Lessons for R workshop at Hendrix ColleAK
+📖🐦 Lessons for R workshop at Hendrix College, AR
 
 Outline:  
 Day 1  
