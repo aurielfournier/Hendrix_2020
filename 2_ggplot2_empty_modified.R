@@ -126,50 +126,22 @@
 
 # http://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
 # http://docs.ggplot2.org/current/
-
-
-
 # you can build your own themes (we'll cover this later)
 # OR you can use some pre made themes
 # https://github.com/jrnold/ggthemes
 
-ggplot(data=abird, 
-  aes(x = year, 
-    y = samplesize, 
-    group=state, color=state)) +
-  geom_line() + 
-  facet_wrap(~state, ncol=2)+
-  theme_economist()
-
-ggplot(data=abird, 
-  aes(x = year, 
-    y = samplesize, 
-    group=state, color=state)) +
-  geom_line() + 
-  facet_wrap(~state, ncol=2)+
-  theme_gdocs()
-
-ggplot(data=abird, 
-  aes(x = year, 
-    y = samplesize, 
-    group=state, color=state)) +
-  geom_line() + 
-  facet_wrap(~state, ncol=2)+
-  theme_excel()
-
-## Custom Themes
 
 ?theme # shows you all the little things you can manipulate in a ggplot
 # thus far I've always been able to get done what needs doing with a custom theme
 # look at the graph below, its pretty visually assualting
 # figure out how to fix it
 
-ggplot(data=abird, 
+ggplot(data=yearly_sex_counts, 
   aes(x = year, 
-    y = samplesize, 
-    group=state, color=state)) +
+    y = n, 
+    group=sex, color=sex)) +
   geom_line() + 
-  facet_wrap(~state, ncol=2)+
+  facet_wrap(~genus, ncol=2)+
   ylab("Life Expectancy")+
   theme(axis.text.x = element_text(size = 15, ang=90, color = "purple"), 
     axis.text.y = element_text(size = 2, color = "red"), 
@@ -186,6 +158,7 @@ ggplot(data=abird,
     legend.background = element_rect(fill="black"),
     legend.text = element_text(color="gray"),
     legend.key=element_rect(fill="white"))
+
 
 
 
@@ -221,25 +194,4 @@ ggplot(data=abird,
   xlab("text here")+ 
   ylab("text here") + 
   scale_fill_manual(values=mypalette)
-
-
-###################################
-## Saving, Stacking and Rearranging Graphs 
-###################################
-
-(one <-   ggplot(data=abird, 
-  aes(x=year, y=samplesize, group=state)) + 
-    geom_line()+
-    theme(axis.text.x=element_text(ang=90)))
-
-(two <- ggplot(data=abird, 
-  aes(x=samplesize, y=presence)) + 
-    geom_point())
-
-
-left <- plot_grid(one, two, nrow=2, align="hv")
-
-#ggsave(a, file="filenamehere.extension")
-ggsave(left, file="~/../Desktop/left.jpeg", 
-  height=4, width=4, units="cm", dpi=600)
 
