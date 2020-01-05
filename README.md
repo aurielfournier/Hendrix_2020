@@ -1,14 +1,15 @@
 # Hendrix
-📖🐦 Lessons for R workshop at Hendrix ColleAK
+📖🐦 Lessons for R workshop at Hendrix College, AR
 
 Outline:  
 Day 1  
-1. Intro to R  
-2. Visualization with ggplot 
+- Intro to R  
+- Visualization with ggplot (Using the DC ggplot lesson as a starting guide: https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html. Skipping the bulk of the faceting section, then switching to Auriels 'Ugly Plot' lesson)  
 
 Day 2  
-3. Using Spreadsheets with R  
-4. Functions and automation with R  
+- Using Spreadsheets with R  (Roughly using the DC spreadsheet lesson:
+https://datacarpentry.org/spreadsheet-ecology-lesson/)  
+- Functions and automation with R  
 
 
 
