@@ -83,39 +83,27 @@ print(i)
 
 #so this allows us to go through actions repeatedly for a large amount of iterations. Can you think of any examples where this might be useful?
 
-#Let's work an example of how for loops are useful, we'll use the eBird data from before to build an interesting situation
+#Let's work an example of how for loops are useful, we'll use the portal data from before to build an interesting situation
 #let's say you wanted to make and save a series of ggplot figures of a core group of species for a project or manuscript, how would you go about doing that? 
 
-#let's remind ourselves of what the ebird data look like from previous lessons:
+#let's remind ourselves of what the portal data look like from previous lessons:
 
-head(abird)
-str(abird)
+head(yearly_sex_counts)
+str(yearly_sex_counts)
 
 #what species do we have?
-spp <- levels(abird$species)
+spp <- levels(yearly_sex_counts$genus)
 spp
 
 #how do we decide which ones we want to graph? Let's pick the ones that were found in all a-states in all years
 #what species do we want to select?
-table(abird$species)
+table(yearly_sex_counts$genus)
 
-#okay, that's a lot of species, too many for us to deal with here. Let's use some data management tricks to select the species that are most common in these areas
-#here we are summing the total numbers of states and years that we see each species in the data set
-#I use rowSums to add all the combinations up
+#Okay so we have 26 species, and a lot of them are not very important. Lets just select species that
+# Have only a certain number of observations
+yearly_sex_counts %>% group_by(genus) %>% summarize(n = sum(n))
 
-?rowSums
-
-spp.sum <- rowSums(matrix(table(abird$species, abird$state), ncol = 50, byrow = FALSE))
-View(spp.sum)
-
-#select species with 44 state/years of data
-
-#with piping
-spp.select <- spp %>5%
-	filter(species %in% spp.select)
-
-#or without piping using a which() command like you used filter() earlier
-spp.select <- spp[which(spp.sum == 44)]
+spp.select <- 
 
 #this is still 60 species, so let's just look at the first 10 so we can try something without it taking too long
 #here are the species that we want to select
