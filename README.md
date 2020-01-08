@@ -18,9 +18,9 @@ Day 1
 - Visualization with ggplot (Using the DC ggplot lesson: https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html. +  Auriels 'Ugly Plot' lesson)  
 
 Day 2  
+- Questions and other things to address
 - Using Spreadsheets with R  (Quickly go through, using the DC spreadsheet lesson:
 https://datacarpentry.org/spreadsheet-ecology-lesson/)  
-- Questions and other things to address
 - Functions and automation with R  (Using the github lessons)
 
 
