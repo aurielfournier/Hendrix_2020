@@ -166,7 +166,7 @@ ggplot(data=yearly_sex_counts,
 # Colors (RColorBrewer)
 #####################
 #http://colorbrewer2.org/
-
+library(RColorBrewer)
 display.brewer.all(n=NULL, type="all", select=NULL, exact.n=TRUE,colorblindFriendly=TRUE)
 
 mypalette<-brewer.pal(4,"Greens")

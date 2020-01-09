@@ -347,23 +347,24 @@ plot(surveys$sex)
 
 
 
+# surveys <- read.csv("portal_data_joined.csv")
+### Create the dataset for exporting:
+##  Start by removing observations for which the `species_id`, `weight`,
+##  `hindfoot_length`, or `sex` data are missing:
+surveys_complete <- surveys %>%
+    filter(species_id != "",        # remove missing species_id
+           !is.na(weight),                 # remove missing weight
+           !is.na(hindfoot_length),        # remove missing hindfoot_length
+           sex != "")                      # remove missing sex
 
-## ### Create the dataset for exporting:
-## ##  Start by removing observations for which the `species_id`, `weight`,
-## ##  `hindfoot_length`, or `sex` data are missing:
-## surveys_complete <- surveys %>%
-##     filter(species_id != "",        # remove missing species_id
-##            !is.na(weight),                 # remove missing weight
-##            !is.na(hindfoot_length),        # remove missing hindfoot_length
-##            sex != "")                      # remove missing sex
-## 
-## ##  Now remove rare species in two steps. First, make a list of species which
-## ##  appear at least 50 times in our dataset:
-## species_counts <- surveys_complete %>%
-##     count(species_id) %>%
-##     filter(n >= 50) %>%
-##     select(species_id)
-## 
-## ##  Second, keep only those species:
-## surveys_complete <- surveys_complete %>%
-##     filter(species_id %in% species_counts$species_id)
+##  Now remove rare species in two steps. First, make a list of species which
+##  appear at least 50 times in our dataset:
+species_counts <- surveys_complete %>%
+    count(species_id) %>%
+    filter(n >= 50) %>%
+    select(species_id)
+
+##  Second, keep only those species:
+surveys_complete <- surveys_complete %>%
+    filter(species_id %in% species_counts$species_id)
+write.csv(surveys_complete, path = "/home/matt/r_programs/Hendrix_2020/surveys_complete.csv")

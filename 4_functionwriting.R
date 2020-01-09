@@ -8,7 +8,6 @@
 
 # use install.packages() if you don't have these already
 library(dplyr)
-library(tidyr)
 library(ggplot2) 
 
 ### Paste Functions
@@ -84,103 +83,74 @@ print(i)
 #so this allows us to go through actions repeatedly for a large amount of iterations. Can you think of any examples where this might be useful?
 
 #Let's work an example of how for loops are useful, we'll use the portal data from before to build an interesting situation
-#let's say you wanted to make and save a series of ggplot figures of a core group of species for a project or manuscript, how would you go about doing that? 
+#let's say you wanted to make and save a series of ggplot figures for each species where we plot
+#how many species were caught per year per sex? But only for commonly caught species.
 
-#let's remind ourselves of what the portal data look like from previous lessons:
+#lets read our cleaned data set from yesterday, and remind ourselves what it looks like
+surveys_complete <- read.csv("/home/matt/r_programs/Hendrix_2020/surveys_complete.csv")
+head(surveys_complete)
+str(surveys_complete)
 
-head(yearly_sex_counts)
-str(yearly_sex_counts)
+# 1. Lets start by making a data table counting the amount of species caught per year per sex
+species_counts <- surveys_complete %>% group_by(species_id,year,sex) %>% count()
 
-#what species do we have?
-spp <- levels(yearly_sex_counts$genus)
-spp
+# 2. Lets see if theres any species that were not caught very often and we can filter out
+species_counts %>% group_by(species_id,sex) %>% tally(n)
 
-#how do we decide which ones we want to graph? Let's pick the ones that were found in all a-states in all years
-#what species do we want to select?
-table(yearly_sex_counts$genus)
+select_species <- species_counts %>% group_by(species_id) %>% tally(n) %>% filter(n>200)
 
-#Okay so we have 26 species, and a lot of them are not very important. Lets just select species that
-# Have only a certain number of observations
-yearly_sex_counts %>% group_by(genus) %>% summarize(n = sum(n))
-
-spp.select <- 
-
-#this is still 60 species, so let's just look at the first 10 so we can try something without it taking too long
-#here are the species that we want to select
-spp.select <- spp.select[1:10]
-
-#and here is how we are going to select species
-#with piping
-abird.species <- abird %>%
-                   filter(species %in% spp.select)
-
-#without piping
-abird.species <- abird[which(abird$species %in% spp.select),]
-
-#let's plot changes in presence over year by state for each species we selected using a for loop
+#let's plot the changes in capture rates over time using a for loop
 #we can loop around a data select and ggplot function so we can do those things repeatedly
 
-for(i in spp.select){
+for(i in select_species$species_id){
   #select the species and make a temporary data frame for the loop
-  abird.tmp <- abird.species[which(abird.species$species == i),]
+  data_tmp <- species_counts %>% filter(species_id==i)
   
   #ggplot code (in slightly different syntax than before) that plots points and lines for each state
   #describe the data.frame and aesthetics
-  p <- ggplot(abird.tmp, aes(x = year, y = presence, group = state, color = state))
+  p <- ggplot(data_tmp, aes(x = year, y = n, group = sex, color = sex))
   #then add the individual plots and graphics commands to that general ggplot fxn
   p <- p + geom_point() + geom_line() + ggtitle(i)
-  plot(p)
-  
+  p
   #save the figure using the paste function that we talked about earlier
-  ggsave(file = paste0(i, '_ebird','.png'), device = 'png', dpi = 300)
+  ggsave(file = paste0(i, '_ByYearBySex','.png'), device = 'png', dpi = 300)
 }
 
-#so using this tool, we just printed out and saved 70 figures (well, 10 because we didn't feel like waiting for all 70...) all at once
+#so using this tool, we just printed out and saved figures all at once
 #let's dissect what happened here:
 #we made a list of species that we wanted to make a figure for
-#then we selected data from our ebird data frame for each of the species that we wanted
+#then we selected data from our data frame for each of the species that we wanted
 #we built a ggplot figure based upon the species data (using paste to customize the figures)
 #then we used the name of the species to build a file name so that we can save unique files for each
-
+  
 #for loops are a pretty powerful strategy in R and figuring out how to get your code to run in for loops can save you a ton of time and energy and is often well worth it
 
 #let's add a bit more complexity, what if we want the loop to take an action only some of the time?
 #using 'if' statements we can create conditional statementss that allow us to shape how the loop behaves
-#let's only graph species with above average probability of presence
-
-#let's look to see what the mean presence is:
-summary(abird)
+#let's only graph species with more than 10 years worth of data, but let the for loop decide to graph or not
 
 #now let's implement an if statement in the previous loop
-for(i in spp.select){
+for(i in select_species$species_id){
   #select the species and make a temporary data frame for the loop
-  abird.tmp <- abird.species[which(abird.species$species == i),]
+  data_tmp <- species_counts %>% filter(species_id==i)
   
-  #the conditional if statement that does something different for 'above average species'
-  if(mean(abird.tmp$presence) > mean(abird$presence))
-    
-    #when the statement is true then we want this to happen:
-    {
-  #the same ggplot plot code as before
-  p <- ggplot(abird.tmp, aes(x = year, y = presence, group = state, color = state))
+  if(length(unique(data_tmp$year)) > 10){
+  #ggplot code (in slightly different syntax than before) that plots points and lines for each state
+  #describe the data.frame and aesthetics
+  p <- ggplot(data_tmp, aes(x = year, y = n, group = sex, color = sex))
+  #then add the individual plots and graphics commands to that general ggplot fxn
   p <- p + geom_point() + geom_line() + ggtitle(i)
-  #plot it, notice that this plots to your RStudio 'Plots' tab
-  plot(p)
-  #now save it using the species name information that we collected
-  ggsave(file = paste0(i, '_ebird','.png'), device = 'png', dpi = 300)
-  } 
-  
-  #then the statement for what to do when the if statement is false:
-  
-  else{
-    print(paste0(i,' does not meat the criteria')
+  p
+  #save the figure using the paste function that we talked about earlier
+  ggsave(file = paste0(i, '_ByYearBySex','.png'), device = 'png', dpi = 300)
+  } else {
+    print(paste0(i,' did not have enough years, skipping'))
   }
 }
 
-#well that cut down on the number of graphs by a fair amount
+
 #reminder: the if/else structure in the loop, if the if statement is TRUE, the first statement in the brackets if run. If it's FALSE then the else statement is run. The else statement isn't required, you can just use the if portion.
 #the if statement must result in a boolean response (TRUE/FALSE)
-
 
 #Trouble-shooting for loops. For loops can be difficult to troubleshoot when they hit a snag so I wanted to give you a couple of tips on troubleshooting them.
 
@@ -195,11 +165,11 @@ for(i in 1:10){
 #2. Print the outputs, or save middle outputs
 for(i in c(1,2,NA,4)){
   print(i)
-  sub.data<-i+1
+  sub_data<-i+1
   print("heres the middle data set")
-  print(sub.data)
+  print(sub_data)
   print('now printing mean')
-  mean(sub.data)
+  mean(sub_data)
 }
 
 #3. Write the for loop last
@@ -213,32 +183,6 @@ for(i in 1:10){
 ## CHALLENGE
 #create a loop that makes a presence over time graph for each species. For species with above median presence for our 10 species group let's use a smooth line, for below median species let's just use points with no line
 
-median(abird$presence)
-
-for(i in spp.select){
-  #select the species and make a temporary data frame for the loop
-  abird.tmp <- abird.species[which(abird.species$species == i),]
-  
-  #the conditional if statement that does something different for 'above-median species'
-  if(median(abird.tmp$presence) > median(abird.species$presence)){
-    #the same ggplot plot code as before
-    p <- ggplot(abird.tmp, aes(x = year, y = presence, group = state, color = state))
-    p <- p + geom_smooth() + ggtitle(i)
-    #plot it, notice that this plots to your RStudio 'Plots' tab
-    plot(p)
-    #now save it using the species name information that we collected
-    ggsave(file = paste0(i, '_ebird_above_med','.png'), device = 'png', dpi = 300)
-  } #if
-  else{
-    #the same ggplot plot code as before
-    p <- ggplot(abird.tmp, aes(x = year, y = presence, group = state, color = state))
-    p <- p + geom_point()  + ggtitle(i)
-    #plot it, notice that this plots to your RStudio 'Plots' tab
-    plot(p)
-    #now save it using the species name information that we collected
-    ggsave(file = paste0(i, '_ebird_below_med','.png'), device = 'png', dpi = 300)
-  } #else
-} #i
 
 
 #but, for loops can be kinda slow and clunky sometimes
@@ -311,14 +255,14 @@ temp_to_c <- function(temp_values, input_temp="F"){
 #for example, they can make randomly generated data sets. These can be useful to test out analyses that you might want to do or validate a methodological approach
 #To do this, we are going to use a similar framework as before but we will now use the rnorm() function that generates data points based upon a user-defined normal distribution.
 
-dat.gen <- function(mu1, sd1,  nsamps, seed){
-  set.seed(seed)
+dat_gen <- function(mu1, sd1,  nsamps, seed){
+  set_seed(seed)
   dat <- rnorm(n = nsamps, mean = mu1, sd = sd1)
   return(dat)
 }
 
 #then we run the function using some parameters (mean1 = 4, sd1 = 1, n = 100, seed =3)
-dat1 <- dat.gen(4, 1, 100, 3)
+dat1 <- dat_gen(4, 1, 100, 3)
 
 
 #we can look at the data that we generated
@@ -328,23 +272,23 @@ summary(dat1)
 hist(dat1)
 
 #if we run it again, we get a different randomly generated data set if we change the seed
-dat2 <- dat.gen(4, 1, 100, 5)
+dat2 <- dat_gen(4, 1, 100, 5)
 summary(dat2)
 hist(dat2)
 
 #of course because we allowed mu, sd, and nsamps we can easily produce normal distributions of varying moments
 
-hist(dat.gen(10, 10, 100, 3))
-hist(dat.gen(-6, 20, 100, 3))
-hist(dat.gen(0, 1, 100, 3))
+hist(dat_gen(10, 10, 100, 3))
+hist(dat_gen(-6, 20, 100, 3))
+hist(dat_gen(0, 1, 100, 3))
 
 #finally, you can use the apply commands to apply functions across a wide range of data types
 
 ?apply
 
-#using our dat.gen function, we'll make a data table with some randomly generated data in it
+#using our dat_gen function, we'll make a data table with some randomly generated data in it
 
-dat <- data.frame(v1 = dat.gen(1, 1, 100, 3), v2 = dat.gen(5, 2, 100, 3), v3 = dat.gen(-2, 3, 100, 3))
+dat <- data_frame(v1 = dat_gen(1, 1, 100, 3), v2 = dat_gen(5, 2, 100, 3), v3 = dat_gen(-2, 3, 100, 3))
 
 #We can apply that function across either the rows or columns of the data.frame.
 #I tell apply that we want to apply a function across rows (1) of our data.frame (dat)
