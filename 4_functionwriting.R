@@ -1,6 +1,6 @@
 ########LESSON 3 ###############
 ### -- Commonly used tools in R for repeated tasks
-### -- By - Evan Adams, Matt Boone, and Auriel Fournier
+### -- By - Matt Boone, Evan Adams,  and Auriel Fournier
 ### -- https://github.com/aurielfournier/AOS2019AK
 
 
@@ -16,7 +16,7 @@ library(ggplot2)
 
 ?paste
 ?paste0
-x <- 'evan'
+x <- 'matt'
 
 # quite note: R assumes that anything written in ' ' is a character string, including numbers and other things that look like numerical data
 
@@ -122,7 +122,7 @@ for(i in select_species$species_id){
 #then we selected data from our data frame for each of the species that we wanted
 #we built a ggplot figure based upon the species data (using paste to customize the figures)
 #then we used the name of the species to build a file name so that we can save unique files for each
-  
+
 #for loops are a pretty powerful strategy in R and figuring out how to get your code to run in for loops can save you a ton of time and energy and is often well worth it
 
 #let's add a bit more complexity, what if we want the loop to take an action only some of the time?
@@ -135,14 +135,14 @@ for(i in select_species$species_id){
   data_tmp <- species_counts %>% filter(species_id==i)
   
   if(length(unique(data_tmp$year)) > 10){
-  #ggplot code (in slightly different syntax than before) that plots points and lines for each state
-  #describe the data.frame and aesthetics
-  p <- ggplot(data_tmp, aes(x = year, y = n, group = sex, color = sex))
-  #then add the individual plots and graphics commands to that general ggplot fxn
-  p <- p + geom_point() + geom_line() + ggtitle(i)
-  p
-  #save the figure using the paste function that we talked about earlier
-  ggsave(file = paste0(i, '_ByYearBySex','.png'), device = 'png', dpi = 300)
+    #ggplot code (in slightly different syntax than before) that plots points and lines for each state
+    #describe the data.frame and aesthetics
+    p <- ggplot(data_tmp, aes(x = year, y = n, group = sex, color = sex))
+    #then add the individual plots and graphics commands to that general ggplot fxn
+    p <- p + geom_point() + geom_line() + ggtitle(i)
+    p
+    #save the figure using the paste function that we talked about earlier
+    ggsave(file = paste0(i, '_ByYearBySex','.png'), device = 'png', dpi = 300)
   } else {
     print(paste0(i,' did not have enough years, skipping'))
   }
@@ -190,7 +190,10 @@ for(i in 1:10){
 #enter, functions
 
 #Function writing, why learn it?
-# There's a couple of reasons learning functions is helpful. One you can write your own common functions. two you can better understand how to troubleshoot your code and other peoples' functions. Three the principles of function writing teach us more about good coding tips to learn including reproduciability.  
+# There's a couple of reasons learning functions is helpful. One you can write your own common functions.
+# Two you can better understand how to troubleshoot your code and other peoples' functions. 
+# Three the principles of function writing teach us more about good coding tips to learn including reproduciability.  
+
 # What is a function and why is it necessary in R
 # A function lets you package code into one unit that doesn't need to be loaded multiple times, or rewritten.
 
@@ -199,16 +202,28 @@ sem <- function(numbers, na.rm = TRUE){
   return(se)
 }
 
-sem(abird$samplesize)
+sem(surveys_complete$hindfoot_length)
 
-c(hi = mean(abird$samplesize) + sem(abird$samplesize),
-  mean = mean(abird$samplesize),
-  lo = mean(abird$samplesize) - sem(abird$samplesize))
+
+c(hi = mean(surveys_complete$hindfoot_length) + sem(surveys_complete$hindfoot_length),
+  mean = mean(surveys_complete$hindfoot_length),
+  lo = mean(surveys_complete$hindfoot_length) - sem(surveys_complete$hindfoot_length))
+
+#infact you can put functions inside of functions
+ci_fun <- function(numbers, na.rm = TRUE){
+  c(hi = mean(numbers) + sem(numbers),
+    mean = mean(numbers),
+    lo = mean(numbers) - sem(numbers)
+  )
+}
+
+ci_fun(surveys_complete$hindfoot_length)
 
 #And we can create a list of all these functions, so we never have to write them again, just load them.
 
 # A function is the functional unit in R. R is built around vectorization and function writing.
-# Once you understand this you'll get better at understanding why R does things the way it does them. And be able to fix functions or use them for your own troubleshooting
+# Once you understand this you'll get better at understanding why R does things the way it does them. 
+# And be able to fix functions or use them for your own troubleshooting
 # A function is anything that has two parenthesis after it's name. 
 # But a function is simply a way to package up code and run it in a confined space. For example lets look at sd
 
