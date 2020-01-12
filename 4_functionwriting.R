@@ -16,91 +16,49 @@ library(ggplot2)
 
 ?paste
 ?paste0
-x <- 'matt'
-
-# quite note: R assumes that anything written in ' ' is a character string, including numbers and other things that look like numerical data
-
+x <- 
 paste0('hello','my','name','is',x)
 paste('hello','my','name','is',x)
-#How these work is they 'paste' together whatever things you give it, exactly how you tell it to
-
-paste0('hello')
-paste('hello','world')
-paste0('hello','world')
-paste0('hello',' world')
-paste('hello','world',sep='-')
-paste('hello','world','my name is',sep=' ')
 
 #This becomes useful when you add in dynamic variables
-i <- 'the best'
+i <- 
 
 paste0('i am ',i)
-
-#Paste is most useful with two things. Reading/writing in files and in concert with the print function (e.g., it's the thing  that allows functions to give you error messages).
-#For instance say you have a set of data but is seperated by state. You could input:
-
-state <- 'AZ'
-
-paste0('myfiles_',state,'.csv')
-
-state <- c('AZ','TX')
-
-paste0('myfiles_',state,'.csv')
-
-#So you can use this in for loops to save/load multiple files at once, or decide what to save/load.
-
-extension <- 'final1'
-
-#saving
-write.csv(data,paste0('myfiles_',extension,'.csv'))
-
-#loading
-read.csv(paste0('myfiles_',extension,'.csv'))
 
 
 ### For loops -- or how to write code in a way that you can do repeated actions
 
-#the basics: what is a for loop? Using brackets you define a repeated set of actions for a variable
-#here is a toy example where we are interested in printing out a series of numbers
 
-for(i in 1:10){
+
+
+
+for(i in c(1,2,3,4,5) ){
   print(i)
 }
 
-#okay, that happened pretty fast, what did it actually do?
-#well let's look at 1:10 see what that looks like
-1:10
 
-#so it created a vector of integers from 1 to 10. Since we told the loop that i was supposed to take on those values and that we should print them, the loop went through each value in sequence and executed the command
-#you can break down what it is doing into component parts fairly easily
-i<-1
-print(i)
-i<-2
-print(i)
-i<-3
-print(i)
 
-#so this allows us to go through actions repeatedly for a large amount of iterations. Can you think of any examples where this might be useful?
 
-#Let's work an example of how for loops are useful, we'll use the portal data from before to build an interesting situation
-#let's say you wanted to make and save a series of ggplot figures for each species where we plot
-#how many species were caught per year per sex? But only for commonly caught species.
 
-#lets read our cleaned data set from yesterday, and remind ourselves what it looks like
-surveys_complete <- read.csv("/home/matt/r_programs/Hendrix_2020/surveys_complete.csv")
+
+
+
+# Lets read our cleaned data set from yesterday, and remind ourselves what it looks like
+surveys_complete <- read.csv("surveys_complete.csv")
 head(surveys_complete)
 str(surveys_complete)
 
-# 1. Lets start by making a data table counting the amount of species caught per year per sex
+# 1. Lets start by remaking our data table counting the amount of species caught per year per sex
 species_counts <- surveys_complete %>% group_by(species_id,year,sex) %>% count()
 
-# 2. Lets see if theres any species that were not caught very often and we can filter out
+# 2. To add another layer, lets see if theres any species that were not caught very often and we can filter out
 species_counts %>% group_by(species_id,sex) %>% tally(n)
 
 select_species <- species_counts %>% group_by(species_id) %>% tally(n) %>% filter(n>200)
 
-#let's plot the changes in capture rates over time using a for loop
-#we can loop around a data select and ggplot function so we can do those things repeatedly
+# Now let's plot the changes in capture rates over time using a for loop
+# We can loop around the `filter`` and `ggplot` functions to create a plot.
+# Then save that plot. And we'll loop through each of our species to do this
 
 for(i in select_species$species_id){
   #select the species and make a temporary data frame for the loop
@@ -116,20 +74,21 @@ for(i in select_species$species_id){
   ggsave(file = paste0(i, '_ByYearBySex','.png'), device = 'png', dpi = 300)
 }
 
-#so using this tool, we just printed out and saved figures all at once
-#let's dissect what happened here:
-#we made a list of species that we wanted to make a figure for
-#then we selected data from our data frame for each of the species that we wanted
-#we built a ggplot figure based upon the species data (using paste to customize the figures)
-#then we used the name of the species to build a file name so that we can save unique files for each
+# So using this tool, we just printed out and saved figures all at once
+# Let's dissect what happened here:
+# We made a list of species that we wanted to make a figure for
+# Then we selected data from our data frame for each of the species that we wanted
+# We built a ggplot figure based upon the species data (using paste to customize the figures)
+# Then we used the name of the species to build a file name so that we can save unique files for each
 
-#for loops are a pretty powerful strategy in R and figuring out how to get your code to run in for loops can save you a ton of time and energy and is often well worth it
+# For loops are a pretty powerful strategy in R and figuring out how to get your code to run in for loops 
+# can save you a ton of time and energy and is often well worth it
 
-#let's add a bit more complexity, what if we want the loop to take an action only some of the time?
-#using 'if' statements we can create conditional statementss that allow us to shape how the loop behaves
-#let's only graph species with more than 10 years worth of data, but let the for loop decide to graph or not
+# Let's add a bit more complexity, what if we want the loop to take an action only some of the time?
+# Using 'if' statements we can create conditional statementss that allow us to shape how the loop behaves
+# Let's only graph species with more than 10 years worth of data, but let the for loop decide to graph or not
 
-#now let's implement an if statement in the previous loop
+# Now let's implement an if statement in the previous loop
 for(i in select_species$species_id){
   #select the species and make a temporary data frame for the loop
   data_tmp <- species_counts %>% filter(species_id==i)
@@ -184,17 +143,20 @@ for(i in 1:10){
 #create a loop that makes a presence over time graph for each species. For species with above median presence for our 10 species group let's use a smooth line, for below median species let's just use points with no line
 
 
+# For loops can be kinda slow and clunky. They're very versatile
+# but come at the expense of cluttery and slow.
 
-#but, for loops can be kinda slow and clunky sometimes
-#there are other ways of packaging r scripts and turning them into something that runs efficiently
-#enter, functions
+# There are other ways of packaging r scripts and turning them into something that runs efficiently
+# Without clutter and are more memory effecient
+# And thats functions
 
-#Function writing, why learn it?
+# Function writing, why learn it?
 # There's a couple of reasons learning functions is helpful. One you can write your own common functions.
 # Two you can better understand how to troubleshoot your code and other peoples' functions. 
 # Three the principles of function writing teach us more about good coding tips to learn including reproduciability.  
 
 # What is a function and why is it necessary in R
+# A function is the backbone of R's structure and creates Rs versatility.
 # A function lets you package code into one unit that doesn't need to be loaded multiple times, or rewritten.
 
 sem <- function(numbers, na.rm = TRUE){
@@ -220,6 +182,7 @@ ci_fun <- function(numbers, na.rm = TRUE){
 ci_fun(surveys_complete$hindfoot_length)
 
 #And we can create a list of all these functions, so we never have to write them again, just load them.
+# Show how to source
 
 # A function is the functional unit in R. R is built around vectorization and function writing.
 # Once you understand this you'll get better at understanding why R does things the way it does them. 
@@ -247,9 +210,6 @@ f_to_c <- function(temp_values){
   (temp_values - 32) * 5/9
 }
 
-# What if we want to add an extra layer of complexity? 
-# nesting functions
-
 # discuss default arguments
 
 #using if statements we can make a modal function that does fairly different things depending on what mode the user defines
@@ -262,63 +222,24 @@ temp_to_c <- function(temp_values, input_temp="F"){
   return(newtemps)
 }
 
-#of course you can make more complex functions with multiple inputs and that can produce other types of results
+# Finally we get to apply functions
+# 'Apply' functions are essentially packaged functions with built in for loops
+# they 'apply' a function across multiple inputs.
+# This can be used to summarize, split, group, etc.
 
-#data simulation example
+# Apply
+set.seed(1234)
 
-#functions don't just have to conduct deterministic calculations for you, they can do a lot of things
-#for example, they can make randomly generated data sets. These can be useful to test out analyses that you might want to do or validate a methodological approach
-#To do this, we are going to use a similar framework as before but we will now use the rnorm() function that generates data points based upon a user-defined normal distribution.
+dat <- matrix(rnorm(100,mean=50, sd=40), nrow=10, ncol=10)
 
-dat_gen <- function(mu1, sd1,  nsamps, seed){
-  set_seed(seed)
-  dat <- rnorm(n = nsamps, mean = mu1, sd = sd1)
-  return(dat)
-}
+## check
+apply(dat, 1, sum)
+apply(dat, 2, sum)
+apply(dat, 2, f_to_c)
 
-#then we run the function using some parameters (mean1 = 4, sd1 = 1, n = 100, seed =3)
-dat1 <- dat_gen(4, 1, 100, 3)
+# lapply
+list()
 
-
-#we can look at the data that we generated
-summary(dat1)
-
-?hist
-hist(dat1)
-
-#if we run it again, we get a different randomly generated data set if we change the seed
-dat2 <- dat_gen(4, 1, 100, 5)
-summary(dat2)
-hist(dat2)
-
-#of course because we allowed mu, sd, and nsamps we can easily produce normal distributions of varying moments
-
-hist(dat_gen(10, 10, 100, 3))
-hist(dat_gen(-6, 20, 100, 3))
-hist(dat_gen(0, 1, 100, 3))
-
-#finally, you can use the apply commands to apply functions across a wide range of data types
-
-?apply
-
-#using our dat_gen function, we'll make a data table with some randomly generated data in it
-
-dat <- data_frame(v1 = dat_gen(1, 1, 100, 3), v2 = dat_gen(5, 2, 100, 3), v3 = dat_gen(-2, 3, 100, 3))
-
-#We can apply that function across either the rows or columns of the data.frame.
-#I tell apply that we want to apply a function across rows (1) of our data.frame (dat)
-#first let's use a function that is in base R already, sum
-
-dat$sum <- apply(dat, 1, sum)
-
-#this should add up each column in a row and add it as a new column in the data.frame, let's have a look at it
-View(dat)
-
-#what if we want to apply a function that we made? Let's use our sem() function from earlier and see how this works
-dat$SE <- apply(dat, 1, sem)
-
-#we added a new column to the data.frame so now we can have a look at how that works too
-View(dat)
 
 ####################################################
 # Summary of if and for loops, functions, and apply

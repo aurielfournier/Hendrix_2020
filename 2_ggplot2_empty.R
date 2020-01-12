@@ -136,23 +136,27 @@
 # look at the graph below, its pretty visually assualting
 # figure out how to fix it
 
+# yearly_sex_counts <- surveys_complete %>%
+# group_by(species_id,sex,year) %>% count() %>%
+#   filter(species_id %in% c("DM","NL","OT","PB")) 
+
 ggplot(data=yearly_sex_counts, 
   aes(x = year, 
     y = n, 
     group=sex, color=sex)) +
   geom_line() + 
-  facet_wrap(~genus, ncol=2)+
+  facet_wrap(~species_id, ncol=2)+
   ylab("Life Expectancy")+
   theme(axis.text.x = element_text(size = 15, ang=90, color = "purple"), 
     axis.text.y = element_text(size = 2, color = "red"), 
-    axis.title.y = element_text(size = 20), 
+    axis.title.y = element_text(size = 40), 
     plot.background = element_rect(fill="green"), 
     panel.background = element_rect(fill="red", color="black"), 
     panel.grid.major = element_line(colour = "red"), 
     panel.grid.minor = element_line(colour = "purple"), 
     title = element_text(size = 1), 
-    #        axis.line.x = element_line(colour = "black"), 
-    #        axis.line.y = element_line(colour = "black"), 
+           axis.line.x = element_line(colour = "black"), 
+            axis.line.y = element_line(colour = "black"), 
     strip.background = element_rect(fill = "orange", color = "black"), 
     strip.text = element_text(size = 15, color="red"),
     legend.background = element_rect(fill="black"),
@@ -171,10 +175,10 @@ display.brewer.all(n=NULL, type="all", select=NULL, exact.n=TRUE,colorblindFrien
 
 mypalette<-brewer.pal(4,"Greens")
 
-ggplot(data=abird, 
-  aes(x=state, 
-    y=samplesize, 
-    fill=state)) + 
+ggplot(data=yearly_sex_counts, 
+  aes(x=species_id, 
+    y=n, 
+    fill=species_id)) + 
   geom_boxplot()+ 
   ggtitle("TITLE HERE")+ 
   xlab("text here")+ 
@@ -185,10 +189,10 @@ mypalette<-brewer.pal(4,"Set2")
 
 mypalette[2] <- "#000000"
 
-ggplot(data=abird, 
-  aes(x=state, 
-    y=samplesize, 
-    fill=state)) + 
+ggplot(data=yearly_sex_counts, 
+  aes(x=species_id, 
+    y=n, 
+    fill=species_id)) + 
   geom_boxplot()+ 
   ggtitle("TITLE HERE")+ 
   xlab("text here")+ 

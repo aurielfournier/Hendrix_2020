@@ -1,3 +1,16 @@
+# Introduction to R
+## Why use R?
+# www.github.com/embruna/refsplitr
+library(refsplitr)
+references <- references_read('archive/BITR', dir=T)
+authors <- authors_clean(references)
+authors <- authors_refine(authors$review, authors$prelim, sim_score = 0.9)
+data_georef <- authors_georef(authors)
+plot_net_country(data_georef)
+# cran
+# ggplot
+# shiny
+# markdown
 
 ### Creating objects in R
 
@@ -137,7 +150,7 @@ length(heights_above_67)
 
 ## download.file(url="https://ndownloader.figshare.com/files/2292169",
 ##               destfile = "data_raw/portal_data_joined.csv")
-
+surveys <- read.csv('/home/matt/r_programs/Hendrix_2020/portal_data_joined.csv')
 
 
 
@@ -367,4 +380,4 @@ species_counts <- surveys_complete %>%
 ##  Second, keep only those species:
 surveys_complete <- surveys_complete %>%
     filter(species_id %in% species_counts$species_id)
-write.csv(surveys_complete, path = "/home/matt/r_programs/Hendrix_2020/surveys_complete.csv")
+write.csv(surveys_complete, path = "data/surveys_complete.csv")
