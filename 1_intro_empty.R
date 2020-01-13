@@ -2,14 +2,20 @@
 ## Why use R?
 # www.github.com/embruna/refsplitr
 library(refsplitr)
-references <- references_read('archive/BITR', dir=T)
+library(ggmap)
+
+references <- references_read('/home/matt/Documents/Workshops/Hendrix2020/BITR', dir=T)
 authors <- authors_clean(references)
 authors <- authors_refine(authors$review, authors$prelim, sim_score = 0.9)
-data_georef <- authors_georef(authors)
-plot_net_country(data_georef)
-# cran
+#BITR_georef <- authors_georef(authors)
+BITR_georef <- read.csv('/home/matt/Documents/Workshops/Hendrix2020/BITR_georef.csv',stringsAsFactors=F)
+p <- plot_net_country(BITR_georef[1:900,])
+p$plot
+# cran - 15344 available packages
 # ggplot
+## http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
 # shiny
+## https://shiny.rstudio.com/gallery/
 # markdown
 
 ### Creating objects in R
