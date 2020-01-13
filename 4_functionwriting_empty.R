@@ -187,9 +187,6 @@ apply(dat, 1, sum)
 apply(dat, 2, sum)
 apply(dat, 2, f_to_c)
 
-# lapply
-list()
-
 
 ####################################################
 # Summary of if and for loops, functions, and apply

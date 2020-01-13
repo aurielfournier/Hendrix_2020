@@ -7,9 +7,9 @@ library(ggmap)
 references <- references_read('/home/matt/Documents/Workshops/Hendrix2020/BITR', dir=T)
 authors <- authors_clean(references)
 authors <- authors_refine(authors$review, authors$prelim, sim_score = 0.9)
-#BITR_georef <- authors_georef(authors)
+BITR_georef <- authors_georef(authors[1:100,])
 BITR_georef <- read.csv('/home/matt/Documents/Workshops/Hendrix2020/BITR_georef.csv',stringsAsFactors=F)
-p <- plot_net_country(BITR_georef[1:900,])
+p <- plot_net_address(BITR_georef, lineAlpha=0.1)
 p$plot
 # cran - 15344 available packages
 # ggplot
