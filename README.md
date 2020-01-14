@@ -18,9 +18,13 @@ Day 1
 - Visualization with ggplot (Using the DC ggplot lesson: https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html. +  Auriels 'Ugly Plot' lesson)  
 
 Day 2  
-- Questions and other things to address
+- Visualization with ggplot
+- Dates in R(skipped from earlier)
 - Using Spreadsheets with R  (Quickly go through, using the DC spreadsheet lesson:
-https://datacarpentry.org/spreadsheet-ecology-lesson/)  
+https://datacarpentry.org/spreadsheet-ecology-lesson/)
+- Markdown (using the rmarkdown.R lesson)
+- A brief intro to mapping using sf in R (using
+https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html)
 - Functions and automation with R  (Using the github lessons)
 
 

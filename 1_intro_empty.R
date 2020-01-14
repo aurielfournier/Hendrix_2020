@@ -3,7 +3,7 @@
 # www.github.com/embruna/refsplitr
 library(refsplitr)
 library(ggmap)
-
+setwd('/home/matt/r_programs/Hendrix_2020')
 references <- references_read('/home/matt/Documents/Workshops/Hendrix2020/BITR', dir=T)
 authors <- authors_clean(references)
 authors <- authors_refine(authors$review, authors$prelim, sim_score = 0.9)
@@ -18,9 +18,13 @@ p$plot
 ## https://shiny.rstudio.com/gallery/
 # markdown
 
+
+install.packages()
+
 ### Creating objects in R
+https://github.com/aurielfournier/Hendrix_2020
 
-
+data <- matrix(1:100)
 
 
 
