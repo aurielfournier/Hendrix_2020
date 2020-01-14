@@ -28,4 +28,17 @@ https://www.r-spatial.org/r/2018/10/25/ggplot2-sf.html)
 - Functions and automation with R  (Using the github lessons)
 
 
+======================
+# Some links for you after the workshop
+
+Style guide (tidyverse) 
+- https://style.tidyverse.org/
+
+Need more help?
+- Swirl : https://swirlstats.com/
+- Data Carpentry Lessons : https://datacarpentry.org/lessons/
+
+Teaching guide for cretaing curricula
+- https://carpentries.github.io/curriculum-development/
+
 
